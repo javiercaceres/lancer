@@ -20,7 +20,7 @@ Los reactores tienen una representación en el Dom que puede manipularse como va
 
 ## Instalación
 
-Descarga la última versión recordando que **Lancer** se basa en **jQuery** por lo que se necesita incluir esta librería primero para su funcionamiento. Es compatible con las versiones 1.11.* o superior. 
+Descarga la última versión de **Lancer**, recuerda que se basa en **jQuery** por lo que se necesita incluir esta librería primero para su funcionamiento. Es compatible con las versiones 1.11.* o superior de jQuery. 
 
 ```html
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -29,6 +29,7 @@ Descarga la última versión recordando que **Lancer** se basa en **jQuery** por
 
 ## Hola Mundo
 
+En construcción...
 
 ## Demo
 
@@ -42,4 +43,4 @@ Este programa es software libre: puede redistribuirlo y/o modificarlo bajo los t
 
 Este programa se distribuye con la esperanza de que sea útil pero SIN NINGUNA GARANTÍA; incluso sin la garantía implícita de MERCANTIBILIDAD o CALIFICADA PARA UN PROPÓSITO EN PARTICULAR. Vea la Licencia General Pública de GNU para más detalles en 
 
-<http://www.gnu.org/licenses/>.
+<http://www.gnu.org/licenses/>
