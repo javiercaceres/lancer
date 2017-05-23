@@ -27,9 +27,54 @@ Descarga la última versión de **Lancer**, recuerda que se basa en **jQuery** p
 <script src="lance.js"></script>
 ```
 
-## Hola Mundo
+## Hola Mundo!
 
-En construcción...
+El primer paso será crear un nuevo reactor con una plantilla y un literal con propiedades.
+
+```javascript
+var helloWorld = lance.r( '<div>{text}</div>', { text: 'Hello world!' } );
+```
+El reactor ofrece una serie de métodos para manipular su representación en el DOM. El primero de ellos es `get$` que permite recuperar su representación como variable **jQuery** generada a partir de la plantilla y el literal.
+
+```javascript
+helloWorld.get$();
+
+$('body').append(helloWorld.get$()); 
+```
+
+Como en el ejemplo anterior puede utilizarse para incluir la representación en el DOM.
+
+```html
+<body>
+    <div>Hello world!</div>
+</body>
+```
+El método `render` actualiza la representación a partir de un nuevo literal.
+
+```javascript
+helloWorld.render( { text: 'Bye bye!' } );
+```
+```html
+<body>
+    <div>Bye bye!</div>
+</body>
+```
+
+El método `remove` elimina la representación tanto internamente como de cualquier instancia incluida en el DOM.
+
+```javascript
+helloWorld.remove();
+helloWorld.get$(); // Devuelve null
+```
+```html
+<body></body>
+```
+
+Una vez removida la representación puede recrearse a través del método `render`, sin embargo, deber ser incluida nuevamente en el DOM.
+
+El último método es `getHTML` equivalente a ejecutar `get$()[0]` que retorna el Element Object de la representación.
+
+Estos métodos solo estarán disponibles en el **reactor** si se ha creado utilizando una plantilla. El literal puede entregar posteriormente. 
 
 ## Demo
 
