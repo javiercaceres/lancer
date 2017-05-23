@@ -1,5 +1,5 @@
 /**
- * @fileoverview Contiene una pequeña libería basada en JQuery llamada Lancer que encapsula 
+ * @fileoverview Contiene una pequeña librería basada en JQuery llamada Lancer que encapsula 
  * funcionalidades inspiradas en frameworks como React o AngularJS con el objetivo de facilitar 
  * actividades comunes en el desarrollo de interfaces.
  * @author Javier Cáceres <javier.caceres.mn@gmail.com>
