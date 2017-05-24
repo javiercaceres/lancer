@@ -72,9 +72,44 @@ helloWorld.get$(); // Devuelve null
 
 Una vez removida la representación puede recrearse a través del método `render`, sin embargo, deber ser incluida nuevamente en el DOM.
 
-El último método es `getHTML` equivalente a ejecutar `get$()[0]` que retorna el Element Object de la representación.
+El último para manipular la representación es `getHTML` equivalente a ejecutar `get$()[0]` que retorna el Element Object de la representación.
 
 Estos métodos solo estarán disponibles en el **reactor** si se ha creado utilizando una plantilla. El literal puede entregar posteriormente. 
+
+La comunicación entre reactores se basa en un sistema de suscripción a **eventos personalizados** a través del método `listen`. El primer argumento es una cadena de caracteres que define al evento, el segundo corresponde al handler a ejecutarse cada vez que se gatilla el evento.
+
+```javascript
+function handler( args ) {
+    ...
+}
+
+helloWorld.listen( 'miEvento', handler );
+```
+
+Un evento puede ser gatillado desde cualquier punto del código que tenga acceso a la variable `lance` usando la función `fire`. Similar al caso anterior, el primer argumento será el nombre del evento, pero el segundo en lugar de una función corresponde a un arreglo con los argumentos para dicha función.
+
+```javascript
+lance.fire( 'miEvento', [ 'arg1', ... ] );
+```
+
+Para desinscribir a un reactor se utiliza el método `forget` cuyo único argumento es el evento en cuestión.
+
+```javascript
+helloWorld.forget( 'miEvento' );
+```
+
+Las propiedades con las que se inicia el reactor se almacenan bajo en nombre de **props**. Si bien pueden actualizarse directamente como cualquier objeto de JavaScript, existe el método `set` que además de modificar las propiedades ejecutará un `render` para actualizar la representación.
+
+```javascript
+var holaMundo = lance.r( '<p class="{class}">{text}</p>', { 
+                    'class' : 'text-blue', text: 'Hola Mundo!' 
+                } );
+// holaMundo.props retorna { 'class' : 'text-blue', text: 'Hola Mundo!' }
+
+holaMundo.set({ text: 'Hello World!' });
+// holaMundo.props retorna { 'class' : 'text-blue', text: 'Hello World!!' }
+// holaMundo.get$() entrega la variable jQuery actualizada
+```
 
 ## Demo
 
@@ -89,3 +124,4 @@ Este programa es software libre: puede redistribuirlo y/o modificarlo bajo los t
 Este programa se distribuye con la esperanza de que sea útil pero SIN NINGUNA GARANTÍA; incluso sin la garantía implícita de MERCANTIBILIDAD o CALIFICADA PARA UN PROPÓSITO EN PARTICULAR. Vea la Licencia General Pública de GNU para más detalles en 
 
 <http://www.gnu.org/licenses/>
+
