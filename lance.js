@@ -86,8 +86,28 @@ var lance = (function () {
         };
     })();
 
-    function Reactor(tmpl, props) {
-        return (function (t, p) {
+    /**
+     * Define al constructor para una nueva clase que a partir de una plantilla, 
+     * propiedades y handlers instanciará a un nuevo Reactor que las usará como base
+     * permitiendo la creación de componentes. 
+     * 
+     * @param {string} tmpl - Plantilla para crear la representación en el DOM del reactor.
+     * @param {Object} props - Mapa con la definición de propiedades.
+     * @param {Object} handlers - Mapa con la colección de eventos y sus handlers.
+     * @example
+     * Reactor(
+     *     '<div>{text}</div>', 
+     *     { text: Hello World! }, 
+     *     { 'userClick': [ 
+     *         function() { 
+     *             console.log('Hello!') 
+     *         } 
+     *     ] }
+     * );
+     * @returns {function} - Constructor del Reactor.
+     */
+    function Reactor(tmpl, props, handlers) {
+        return (function (t, p, h) {
             return function () {
                 var _tmpl = t || null, _$elem = null, _that = this, _ebus = eBus, _handlers = {};
 
@@ -129,8 +149,8 @@ var lance = (function () {
                  * A partir de un template y un grupo de propiedades (props) genera un objeto jQuery que
                  * representa el elemento descrito en la plantilla. 
                  * 
-                 * @param {Object} props 
-                 * @returns {Object}  
+                 * @param {Object} - Mapa con las nuevas propiedades. 
+                 * @returns {Object} - Objeto jQuery que representa al reactor actualizado.
                  */
                 function render(props) {
                     var $elem = $(evaluation(_tmpl, props));
@@ -229,9 +249,14 @@ var lance = (function () {
                         this.render(this.props);
                     }
                 }
-
+                // Se aplica el método listen por cada handler recibido como argumento del
+                // constructor.
+                if (h) for (var event in h)
+                    h[event].forEach(function(handler) {
+                        _that.listen(event, handler);
+                    });
             }
-        })(tmpl, props);
+        })(tmpl, props, handlers);
     }
 
     /**
@@ -247,8 +272,9 @@ var lance = (function () {
     };
 
     return {
-        r: function (t, p) {
-            return new (Reactor(t, p))();
+        rClass: Reactor,
+        r: function (t, p, h) {
+            return new (Reactor(t, p, h))();
         },
         fire: fire
     };
