@@ -112,7 +112,7 @@ var lance = (function () {
     function Reactor(tmpl, props, handlers) {
         return (function (t, p, h) {
             return function () {
-                var _tmpl = t || null, _$elem = null, _that = this, _ebus = eBus, _handlers = {};
+                var _tmpl = t || null, _$elem = null, _that = this, _eBus = eBus, _handlers = {};
 
                 /**
                  * Reemplaza cada variable en el template con las props entregadas en el literal.
@@ -247,6 +247,7 @@ var lance = (function () {
                     this.get$ = get$;
                     this.getHtml = getHtml;
                     this.remove = remove;
+                    this.set = set;
                     if (props) {
                         this.props = $.extend(true, {}, props);
                         this.render(this.props);
