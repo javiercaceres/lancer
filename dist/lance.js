@@ -94,9 +94,9 @@ var lance = (function () {
      * propiedades y handlers instanciará a un nuevo Reactor que las usará como base
      * permitiendo la creación de componentes. 
      * 
-     * @param {string} tmpl - Plantilla para crear la representación en el DOM del reactor.
-     * @param {Object} props - Mapa con la definición de propiedades.
-     * @param {Object} handlers - Mapa con la colección de eventos y sus handlers.
+     * @param {string} [tmpl] - Plantilla para crear la representación en el DOM del reactor.
+     * @param {Object} [props] - Mapa con la definición de propiedades.
+     * @param {Object} [handlers] - Mapa con la colección de eventos y sus handlers.
      * @example
      * Reactor(
      *     '<div>{text}</div>', 
@@ -152,7 +152,7 @@ var lance = (function () {
                  * A partir de un template y un grupo de propiedades (props) genera un objeto jQuery que
                  * representa el elemento descrito en la plantilla. 
                  * 
-                 * @param {Object} - Mapa con las nuevas propiedades. 
+                 * @param {Object} props - Mapa con las nuevas propiedades. 
                  * @returns {Object} - Objeto jQuery que representa al reactor actualizado.
                  */
                 function render(props) {
@@ -195,10 +195,12 @@ var lance = (function () {
                  * @param {Object} props - Objeto literal usado como mapa para asignar nuevas props.
                  * @example 
                  * myReactor.set({propname: value});
+                 * @returns {Object} - Propiedades actualizadas.
                  */
                 function set(props) {
                     for (var key in props) _that.props[key] = props[key];
                     _$elem && this.render(_that.props);
+                    return _that.props;
                 }
 
                 /**
@@ -230,7 +232,7 @@ var lance = (function () {
                  * Método que elimina todos los handlers asociados a un evento y que
                  * desinscribe al reactor de ese evento en el bus.
                  * 
-                 * @param {string} event -  
+                 * @param {string} event - Nombre bajo el que se registró el evento. 
                  */
                 this.forget = function (event) {
                     delete this._handlers[event];
