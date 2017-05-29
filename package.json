@@ -1,0 +1,34 @@
+{
+  "name": "lancer",
+  "version": "0.2.0",
+  "description": "A jQuery based tool to make your life easier!",
+  "main": "dist/jquery.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "dependencies": {
+    "jquery": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javiercaceres/lancer.git"
+  },
+  "keywords": [
+    "jQuery",
+    "Event bus",
+    "Components",
+    "Conciliator",
+    "Reactive"
+  ],
+  "author": "Javier Cáceres M <javier.caceres.mn@gmail.com> (https://github.com/javiercaceres)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/javiercaceres/lancer/issues"
+  },
+  "homepage": "https://github.com/javiercaceres/lancer#readme",
+  "devDependencies": {
+    "chai": "^4.0.0",
+    "mocha": "^3.4.2",
+    "jsdom": "9.12.0"
+  }
+}

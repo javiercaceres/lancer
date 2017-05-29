@@ -3,7 +3,7 @@
  * funcionalidades inspiradas en frameworks como React o AngularJS con el objetivo de facilitar 
  * actividades comunes en el desarrollo de interfaces.
  * @author Javier Cáceres <javier.caceres.mn@gmail.com>
- * @version 0.1.0
+ * @version 0.2.0
  */
 
 /**
@@ -13,19 +13,22 @@
 
 /**
  * La base de esta Librería son los llamados reactores (r): Objetos que se inicializan con una
- * plantilla y un literal que usarán como propiedades. La plantilla es interpretada y transformada 
- * en un elemento del Dom a la que se asignan las propiedades iniciales, cuando cambian estas
- * propiedades el elemento es actualizado automáticamente.
+ * plantilla, un literal que usarán como propiedades y una colección de handlers asociados a eventos
+ * personalizados. 
+ * La plantilla es interpretada y transformada en un elemento del Dom a la que se asignan las 
+ * propiedades iniciales, cuando cambian estas propiedades el elemento es actualizado automáticamente.
  * Los reactores se comunican entre si mediante suscripciones a eventos. Un evento puede ser
  * disparado llamando al método "fire".
  * La representación del reactor en el Dom puede ser manipulada como variable jQuery o elemento
- * del Dom, también puede ser eliminada, recreada o actualizada con nuevas propiedades.   
+ * del Dom, también puede ser eliminada, recreada o actualizada con nuevas propiedades.
+ * Puedes definir un componente agrupando una plantilla, propiedades y handlers en un constructor
+ * para generar nuevos Reactores.     
  * 
  * @returns {Object} - Expone el método para la creación de una nueva instancia de un reactor (r)
  *                     y la función para transmitir eventos a través del bus (fire.)
  */
-var lance = (function () {
 
+var lance = (function () {
     /**
      * Bus encargado de difundir los eventos a los diferentes suscriptores.
      * 
@@ -197,7 +200,7 @@ var lance = (function () {
                     for (var key in props) _that.props[key] = props[key];
                     _$elem && this.render(_that.props);
                 }
-                
+
                 /**
                  * Registra un handler a dispararse ante un evento en particular a través
                  * del método catch. También suscribre al reactor a ese evento en el bus.
@@ -252,7 +255,7 @@ var lance = (function () {
                 // Se aplica el método listen por cada handler recibido como argumento del
                 // constructor.
                 if (h) for (var event in h)
-                    h[event].forEach(function(handler) {
+                    h[event].forEach(function (handler) {
                         _that.listen(event, handler);
                     });
             }
@@ -279,3 +282,5 @@ var lance = (function () {
         fire: fire
     };
 })();
+
+if (typeof module === "object" && typeof module.exports === "object") module.exports = lance;

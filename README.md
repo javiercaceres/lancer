@@ -117,7 +117,7 @@ Puedes encontrar una demo de la librería [Aquí](https://plnkr.co/edit/31uT8iPI
 
 ## Licencia
 
-Copyright (C) 2017 Javier Cáceres Miño
+Copyright (C) 2017 Javier Cáceres M.
 
 Este programa es software libre: puede redistribuirlo y/o modificarlo bajo los términos de la Licencia General Pública de GNU publicada por la Free Software Foundation, ya sea la versión 3 de la Licencia, o (a su elección) cualquier versión posterior.
 
