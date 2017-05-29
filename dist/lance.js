@@ -3,7 +3,7 @@
  * funcionalidades inspiradas en frameworks como React o AngularJS con el objetivo de facilitar 
  * actividades comunes en el desarrollo de interfaces.
  * @author Javier Cáceres <javier.caceres.mn@gmail.com>
- * @version 0.1.0
+ * @version 0.2.0
  */
 
 /**
@@ -13,19 +13,22 @@
 
 /**
  * La base de esta Librería son los llamados reactores (r): Objetos que se inicializan con una
- * plantilla y un literal que usarán como propiedades. La plantilla es interpretada y transformada 
- * en un elemento del Dom a la que se asignan las propiedades iniciales, cuando cambian estas
- * propiedades el elemento es actualizado automáticamente.
+ * plantilla, un literal que usarán como propiedades y una colección de handlers asociados a eventos
+ * personalizados. 
+ * La plantilla es interpretada y transformada en un elemento del Dom a la que se asignan las 
+ * propiedades iniciales, cuando cambian estas propiedades el elemento es actualizado automáticamente.
  * Los reactores se comunican entre si mediante suscripciones a eventos. Un evento puede ser
  * disparado llamando al método "fire".
  * La representación del reactor en el Dom puede ser manipulada como variable jQuery o elemento
- * del Dom, también puede ser eliminada, recreada o actualizada con nuevas propiedades.   
+ * del Dom, también puede ser eliminada, recreada o actualizada con nuevas propiedades.
+ * Puedes definir un componente agrupando una plantilla, propiedades y handlers en un constructor
+ * para generar nuevos Reactores.     
  * 
  * @returns {Object} - Expone el método para la creación de una nueva instancia de un reactor (r)
  *                     y la función para transmitir eventos a través del bus (fire.)
  */
-var lance = (function () {
 
+var lance = (function () {
     /**
      * Bus encargado de difundir los eventos a los diferentes suscriptores.
      * 
@@ -86,10 +89,30 @@ var lance = (function () {
         };
     })();
 
-    function Reactor(tmpl, props) {
-        return (function (t, p) {
+    /**
+     * Define al constructor para una nueva clase que a partir de una plantilla, 
+     * propiedades y handlers instanciará a un nuevo Reactor que las usará como base
+     * permitiendo la creación de componentes. 
+     * 
+     * @param {string} [tmpl] - Plantilla para crear la representación en el DOM del reactor.
+     * @param {Object} [props] - Mapa con la definición de propiedades.
+     * @param {Object} [handlers] - Mapa con la colección de eventos y sus handlers.
+     * @example
+     * Reactor(
+     *     '<div>{text}</div>', 
+     *     { text: Hello World! }, 
+     *     { 'userClick': [ 
+     *         function() { 
+     *             console.log('Hello!') 
+     *         } 
+     *     ] }
+     * );
+     * @returns {function} - Constructor del Reactor.
+     */
+    function Reactor(tmpl, props, handlers) {
+        return (function (t, p, h) {
             return function () {
-                var _tmpl = t || null, _$elem = null, _that = this, _ebus = eBus, _handlers = {};
+                var _tmpl = t || null, _$elem = null, _that = this, _eBus = eBus, _handlers = {};
 
                 /**
                  * Reemplaza cada variable en el template con las props entregadas en el literal.
@@ -129,8 +152,8 @@ var lance = (function () {
                  * A partir de un template y un grupo de propiedades (props) genera un objeto jQuery que
                  * representa el elemento descrito en la plantilla. 
                  * 
-                 * @param {Object} props 
-                 * @returns {Object}  
+                 * @param {Object} props - Mapa con las nuevas propiedades. 
+                 * @returns {Object} - Objeto jQuery que representa al reactor actualizado.
                  */
                 function render(props) {
                     var $elem = $(evaluation(_tmpl, props));
@@ -172,12 +195,14 @@ var lance = (function () {
                  * @param {Object} props - Objeto literal usado como mapa para asignar nuevas props.
                  * @example 
                  * myReactor.set({propname: value});
+                 * @returns {Object} - Propiedades actualizadas.
                  */
                 function set(props) {
                     for (var key in props) _that.props[key] = props[key];
                     _$elem && this.render(_that.props);
+                    return _that.props;
                 }
-                
+
                 /**
                  * Registra un handler a dispararse ante un evento en particular a través
                  * del método catch. También suscribre al reactor a ese evento en el bus.
@@ -207,10 +232,10 @@ var lance = (function () {
                  * Método que elimina todos los handlers asociados a un evento y que
                  * desinscribe al reactor de ese evento en el bus.
                  * 
-                 * @param {string} event -  
+                 * @param {string} event - Nombre bajo el que se registró el evento. 
                  */
                 this.forget = function (event) {
-                    delete this._handlers[event];
+                    delete _handlers[event];
                     _eBus.unsubscribe(event, this);
                 };
 
@@ -224,14 +249,20 @@ var lance = (function () {
                     this.get$ = get$;
                     this.getHtml = getHtml;
                     this.remove = remove;
+                    this.set = set;
                     if (props) {
                         this.props = $.extend(true, {}, props);
                         this.render(this.props);
                     }
                 }
-
+                // Se aplica el método listen por cada handler recibido como argumento del
+                // constructor.
+                if (h) for (var event in h)
+                    h[event].forEach(function (handler) {
+                        _that.listen(event, handler);
+                    });
             }
-        })(tmpl, props);
+        })(tmpl, props, handlers);
     }
 
     /**
@@ -247,9 +278,12 @@ var lance = (function () {
     };
 
     return {
-        r: function (t, p) {
-            return new (Reactor(t, p))();
+        rClass: Reactor,
+        r: function (t, p, h) {
+            return new (Reactor(t, p, h))();
         },
         fire: fire
     };
 })();
+
+if (typeof module === "object" && typeof module.exports === "object") module.exports = lance;

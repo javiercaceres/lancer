@@ -18,9 +18,13 @@ Los reactores pueden iniciarse con una **plantilla** que se traducirá en una **
 
 Los reactores tienen una representación en el Dom que puede manipularse como variable jQuery o DOM Element. Esta representación puede ser eliminada, recreada o actualizada a través del reactor.
 
+#### 4) Componentes
+
+Es posible crear una clase asociandole una plantilla, propiedades y handlers que serán usados por defecto en los reactores intanciados a partir de ella. 
+
 ## Instalación
 
-Descarga la última versión de **Lancer**, recuerda que se basa en **jQuery** por lo que se necesita incluir esta librería primero para su funcionamiento. Es compatible con las versiones 1.11.* o superior de jQuery. 
+Descarga la [última versión](https://github.com/javiercaceres/lancer/releases/latest) de **Lancer**, recuerda que se basa en **jQuery** por lo que se necesita incluir esta librería primero para su funcionamiento. Es compatible con las versiones 1.11.* o superior de jQuery. 
 
 ```html
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -111,13 +115,172 @@ holaMundo.set({ text: 'Hello World!' });
 // holaMundo.get$() entrega la variable jQuery actualizada
 ```
 
+## Documentación
+
+### Reactor
+
+#### r(tmpl, props, handlers) 
+
+Instancia un nuevo reactor que opcionalmente puede recibir una plantilla para generar una representación en el DOM.
+También puede inicializarse con un mapa de propiedades que se usarán para la construcción de la representación y una colección de handlers.  
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| [tmpl] | `string`  | Plantilla para crear la representación en el DOM del reactor. |
+| [props] | `Object`  | Mapa con la definición de propiedades. |
+| [handlers] | `Object`  | Mapa con la colección de eventos y sus handlers. |
+
+##### Ejemplo
+
+```javascript
+var Reactor = lance.r(
+    '<div>{text}</div>', 
+    { text: Hello World! }, 
+    { 'userClick': [ 
+        function() { 
+            console.log('Hello!') 
+        } 
+    ] }
+);
+```
+##### Retorna
+
+- `function`  Constructor del Reactor.
+
+#### Manipulación del DOM
+
+Estos métodos solo estarán disponibles en el Reactor si se ha inicializado con una plantilla.
+
+#### get$() 
+
+Retorna el objeto jQuery del reactor.
+
+##### Retorna
+
+- `Object`  Objeto jQuery que representa al reactor.
+
+#### getHtml() 
+
+Retorna el Element Object asociado al objeto jQuery contenido
+en el reactor.
+
+##### Retorna
+
+- `Object`  Element Object asociado al reactor.
+
+#### render(props) 
+
+A partir de un template y un grupo de propiedades (props) genera un objeto jQuery que representa el elemento descrito en la plantilla. 
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| props | `Object`  | Mapa con las nuevas propiedades. |
+
+##### Retorna
+
+- `Object`  Objeto jQuery que representa al reactor actualizado.
+
+#### set(props) 
+
+Asigna nuevos valores a las props del reactor y luego redibuja su representación en el dom actualizando los valores del template con los nuevos datos.
+
+##### Parámetros
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| props | `Object`  | Objeto literal usado como mapa para asignar nuevas props. |
+
+##### Ejemplos
+
+```javascript
+myReactor.set({propname: value});
+```
+##### Retorna
+
+- `Object`  Propiedades actualizadas.
+
+#### remove() 
+
+Elimina la representación internamente y del DOM.
+
+### Manipulación de eventos
+
+#### listen(event, handler) 
+
+Registra un handler a dispararse ante un evento en particular a través del método catch. También suscribre al reactor a ese evento en el bus.
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| event | `string`  | Evento en el que se registrará el handler. |
+| handler | `function`  | Función a ejecutarse ante el evento. |
+
+#### forget(event) 
+
+Método que elimina todos los handlers asociados a un evento y que
+desinscribe al reactor de ese evento en el bus.
+
+##### Parameters
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| event | `string`  | Nombre bajo el que se registró el evento |
+
+### Componentes
+
+#### rClass(tmpl, props, handlers) 
+
+Define al constructor para una nueva clase que a partir de una plantilla, propiedades y handlers instanciará a un nuevo Reactor que las usará como base permitiendo la creación de componentes. 
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| [tmpl] | `string`  | Plantilla para crear la representación en el DOM del reactor. |
+| [props] | `Object`  | Mapa con la definición de propiedades. |
+| [handlers] | `Object`  | Mapa con la colección de eventos y sus handlers. |
+
+##### Ejemplo
+
+```javascript
+var DivReactorClass = lance.rClass(
+    '<div>{text}</div>', 
+    { text: Hello World! }, 
+    { 'userClick': [ 
+        function() { 
+            console.log('Hello!') 
+        } 
+    ] }
+);
+
+var divInstance = new DivReactorClass();
+```
+
+### Ejecución de eventos
+
+#### fire(event, args) 
+
+Comunica al bus un evento y los argumentos que podrían usar los handlers de los reactores.
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| event | `string`  | Evento a transmitir a través del bus. |
+| args | `array`  | Argumentos para los handlers. |
+
 ## Demo
 
 Puedes encontrar una demo de la librería [Aquí](https://plnkr.co/edit/31uT8iPIX3cLwxKv7o71)
 
 ## Licencia
 
-Copyright (C) 2017 Javier Cáceres Miño
+Copyright (C) 2017 Javier Cáceres M.
 
 Este programa es software libre: puede redistribuirlo y/o modificarlo bajo los términos de la Licencia General Pública de GNU publicada por la Free Software Foundation, ya sea la versión 3 de la Licencia, o (a su elección) cualquier versión posterior.
 
