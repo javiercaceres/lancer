@@ -176,8 +176,8 @@ A partir de un template y un grupo de propiedades (props) genera un objeto jQuer
 
 ##### Parámetros
 
-| Nombre | Tipo | Descripción |  |
-| ---- | ---- | ----------- | -------- |
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
 | props | `Object`  | Mapa con las nuevas propiedades. |
 
 ##### Retorna
@@ -227,7 +227,7 @@ desinscribe al reactor de ese evento en el bus.
 
 ##### Parameters
 
-| Nombre | Tipo | Descripción |  |
+| Nombre | Tipo | Descripción |
 | ---- | ---- | ----------- |
 | event | `string`  | Nombre bajo el que se registró el evento |
 
