@@ -70,6 +70,19 @@ describe('Reactor - Event Bus', function () {
             expect(listened).to.be.true;
         });
     });
+
+    describe('#forget()', function () {
+        it("should forget the custom event", function () {
+            var emitter = lance.r(), listened = false;
+            emitter.listen('customEvent', function (value) {
+                listened = value;
+            });
+            emitter.forget('customEvent');
+            lance.fire('customEvent', [true]);
+
+            expect(listened).to.be.false;
+        });
+    });
 });
 
 describe('Reactor - Setter', function () {

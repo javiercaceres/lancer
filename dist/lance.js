@@ -235,7 +235,7 @@ var lance = (function () {
                  * @param {string} event - Nombre bajo el que se registró el evento. 
                  */
                 this.forget = function (event) {
-                    delete this._handlers[event];
+                    delete _handlers[event];
                     _eBus.unsubscribe(event, this);
                 };
 
