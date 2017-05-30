@@ -4,7 +4,8 @@
   "description": "A jQuery based tool to make your life easier!",
   "main": "dist/jquery.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec"
+    "test": "node_modules/.bin/mocha --reporter spec",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*"
   },
   "dependencies": {
     "jquery": "*"
@@ -28,7 +29,9 @@
   "homepage": "https://github.com/javiercaceres/lancer#readme",
   "devDependencies": {
     "chai": "^4.0.0",
-    "mocha": "^3.4.2",
-    "jsdom": "9.12.0"
+    "coveralls": "^2.13.1",
+    "istanbul": "^0.4.5",
+    "jsdom": "9.12.0",
+    "mocha": "^3.4.2"
   }
 }

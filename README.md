@@ -1,5 +1,7 @@
 # Lancer
 
+[![Build Status](https://travis-ci.org/javiercaceres/lancer.svg?branch=master)](https://travis-ci.org/javiercaceres/lancer)
+
 Es una pequeña librería basada en **jQuery** que encapsula funcionalidades inspiradas en frameworks como React o AngularJS con el objetivo de facilitar actividades comunes en el desarrollo de interfaces.
 
 ## ¿Qué hace?
