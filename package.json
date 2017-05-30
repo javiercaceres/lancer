@@ -1,6 +1,6 @@
 {
-  "name": "lancer",
-  "version": "0.2.0",
+  "name": "lancer-js",
+  "version": "0.3.0",
   "description": "A jQuery based tool to make your life easier!",
   "main": "dist/jquery.js",
   "scripts": {
