@@ -116,7 +116,7 @@ describe('Reactor Class', function () {
             }
         ),
         divInstance = new DivReactor();
-    
+
     lance.fire('customEvent', [true]);
 
     describe('Initialization', function () {
@@ -132,5 +132,37 @@ describe('Reactor Class', function () {
             expect(divInstance.props).to.have.property('text');
             expect(divInstance.props.text).to.equal('default');
         });
+    });
+});
+
+describe("Reactors syncronizer", function () {
+    describe('New store', function () {
+        var r1 = lance.r('<div>{text}</div>', { text: null }),
+            r2 = lance.r('<div>{text}</div>', { text: null }),
+            r3 = lance.r('<div>{text}</div>', { text: null }),
+            rSync = lance.rs(null, [r1, r2]);
+
+        rSync.balance({ text: 'Hello World!' });
+
+        it('should synchronize his reactors', function () {
+            expect(r1.props.text).to.equal('Hello World!');
+            expect(r2.props.text).to.equal('Hello World!');
+        });
+
+        it('should receive new reactors', function () {
+            rSync.inc(r3).balance({ text: 'Hola Mundo!' });
+
+            expect(r1.props.text).to.equal('Hola Mundo!');
+            expect(r2.props.text).to.equal('Hola Mundo!');
+            expect(r3.props.text).to.equal('Hola Mundo!');
+        });
+
+        it('should ignore excluded reactors', function () {
+            rSync.exc(r3).balance({ text: 'Hello World!' });
+
+            expect(r1.props.text).to.equal('Hello World!');
+            expect(r2.props.text).to.equal('Hello World!');
+            expect(r3.props.text).to.equal('Hola Mundo!');
+        })
     });
 });

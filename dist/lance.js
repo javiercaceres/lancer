@@ -90,6 +90,92 @@ var lance = (function () {
     })();
 
     /**
+     * Genera un sincronizador encargado de ejecutar el método 'set' en cada uno 
+     * de sus reactores cada vez que reciba una actualización sobre sus propiedades.
+     *  
+     * @param {Object} [props] - Propiedades con las que se inicializa el sincronizador. 
+     * @param {array} [reactors] - Colección de reactores con que se inicia el sincronizador. 
+     * @returns 
+     */
+    function rSync(props, reactors) {
+        
+        function Syncronizer(p, r) {
+            var _domain = r || [], _props = p || {}, _that = this;
+
+            /**
+             * Genera las propiedades con las que se actualizará un reactor a partir
+             * de un literal. En caso de que no identifique diferencias retornará
+             * false.
+             * 
+             * @param {Object} reactor - Reactor por actualizar.
+             * @param {Object} props - Literal con las nuevas propiedades. 
+             * @returns {Object|Boolean} - Retorna un literal con propiedades o 'false' cuando no las hay.
+             */
+            function update(reactor, props) {
+                var updatedProps = {}, renderNeeded = false;
+                for (var prop in props)
+                    if (reactor.props[prop] !== undefined && reactor.props[prop] != _props[prop]) {
+                        updatedProps[prop] = _props[prop];
+                        renderNeeded = true;
+                    }
+                return renderNeeded ? updatedProps : false;
+            }
+
+            /**
+             * Determina si debe actualizar o no los reactores. En tal caso ejecuta el
+             * método 'set' en cada uno de ellos.
+             * 
+             * @param {Object} props - Literal con las nuevas propiedades. 
+             * @returns {Object} - Propiedades actualizadas del sincronizador.
+             */
+            this.balance = function(props) {
+                var updated = false;
+                for (var newProp in props) 
+                    if (!_props[newProp] || _props[newProp] !== props[newProp]) {
+                        _props[newProp] = props[newProp];
+                        updated = true;
+                    }
+                updated && _domain.forEach(function(reactor) {
+                    var updatedProps = update(reactor, _props);
+                    updatedProps && reactor.set(updatedProps);
+                });
+                return _props;
+            }
+
+            /**
+             * Agrega un reactor al dominio del sincronizador. No se puede incluir dos 
+             * veces al mismo reactor. Una vez incluido es inmediatamente sincronizado.
+             * 
+             * @param {any} reactor - Reactor a incluir.
+             * @returns {Object} - Sincronizador.
+             */
+            this.inc = function(reactor) {
+                if (_domain.indexOf(reactor) == -1) {
+                    var updatedProps = update(reactor, _props);
+                    _domain.push(reactor);
+                    updatedProps && reactor.set(updatedProps);
+                } else console.info('Reactor already included');
+                return _that;
+            }
+
+            /**
+             * Quita un reactor del dominio del sincronizador.
+             * 
+             * @param {Object} reactor - Reactor a excluir. 
+             * @returns {Object} - Sincronizador.
+             */
+            this.exc = function(reactor) {
+                _domain.splice(_domain.indexOf(reactor), 1);
+                return _that;
+            }
+        }
+
+        return (function(p, r) {
+            return new Syncronizer(p, r);
+        })(props, reactors); 
+    }
+
+    /**
      * Define al constructor para una nueva clase que a partir de una plantilla, 
      * propiedades y handlers instanciará a un nuevo Reactor que las usará como base
      * permitiendo la creación de componentes. 
@@ -282,7 +368,8 @@ var lance = (function () {
         r: function (t, p, h) {
             return new (Reactor(t, p, h))();
         },
-        fire: fire
+        fire: fire,
+        rs: rSync
     };
 })();
 
