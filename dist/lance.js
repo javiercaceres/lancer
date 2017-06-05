@@ -22,10 +22,14 @@
  * La representación del reactor en el Dom puede ser manipulada como variable jQuery o elemento
  * del Dom, también puede ser eliminada, recreada o actualizada con nuevas propiedades.
  * Puedes definir un componente agrupando una plantilla, propiedades y handlers en un constructor
- * para generar nuevos Reactores.     
+ * para generar nuevos Reactores.
+ * La información de una vista puede centralizarse en un sincronizador que actualizará a los reactores
+ * que controle cada vez que tengan lugar cambios en sus propiedades.     
  * 
- * @returns {Object} - Expone el método para la creación de una nueva instancia de un reactor (r)
- *                     y la función para transmitir eventos a través del bus (fire.)
+ * @returns {Object} - Expone el método para la creación de una nueva instancia de un reactor (r),
+ *                     generación de componentes a partir de una clase (rClass),la función para 
+ *                     transmitir eventos a través del bus (fire) y una nueva instancia de un 
+ *                     sincronizador (rs).
  */
 
 var lance = (function () {

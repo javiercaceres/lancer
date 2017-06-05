@@ -27,11 +27,17 @@ Es posible crear una clase asociandole una plantilla, propiedades y handlers que
 
 ## Instalación
 
-Descarga la [última versión](https://github.com/javiercaceres/lancer/releases/latest) de **Lancer**, recuerda que se basa en **jQuery** por lo que se necesita incluir esta librería primero para su funcionamiento. Es compatible con las versiones 1.11.* o superior de jQuery. 
+Descarga la [última versión](https://github.com/javiercaceres/lancer/releases/latest) de **Lancer**, recuerda que se basa en **jQuery** por lo que se necesita incluir esta librería primero para su funcionamiento. Es compatible con las versiones 1.11.* o superior de jQuery.
 
 ```html
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="lance.js"></script>
+```
+
+También puedes incluirla en **Node** utilizando npm.
+
+```javascript
+npm install lancer-js
 ```
 
 ## Hola Mundo!
