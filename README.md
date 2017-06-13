@@ -1,5 +1,8 @@
 # Lancer
 
+[![Build Status](https://travis-ci.org/javiercaceres/lancer.svg?branch=develop)](https://travis-ci.org/javiercaceres/lancer)
+[![Coverage Status](https://coveralls.io/repos/github/javiercaceres/lancer/badge.svg?branch=develop)](https://coveralls.io/github/javiercaceres/lancer?branch=develop)
+
 Es una pequeña librería basada en **jQuery** que encapsula funcionalidades inspiradas en frameworks como React o AngularJS con el objetivo de facilitar actividades comunes en el desarrollo de interfaces.
 
 ## ¿Qué hace?
@@ -20,15 +23,38 @@ Los reactores tienen una representación en el Dom que puede manipularse como va
 
 #### 4) Componentes
 
-Es posible crear una clase asociandole una plantilla, propiedades y handlers que serán usados por defecto en los reactores intanciados a partir de ella. 
+Es posible crear una clase asociándole una plantilla, propiedades y handlers que serán usados por defecto en los reactores instanciados a partir de ella.
+
+#### 5) Flujo de datos unidireccional
+
+A través de un sincronizador que actúa como almacén de datos para un grupo de reactores los cambios fluyen desde sus propiedades a las de los reactores actualizándolas junto a su representación en el DOM.
 
 ## Instalación
 
-Descarga la [última versión](https://github.com/javiercaceres/lancer/releases/latest) de **Lancer**, recuerda que se basa en **jQuery** por lo que se necesita incluir esta librería primero para su funcionamiento. Es compatible con las versiones 1.11.* o superior de jQuery. 
+Descarga la [última versión](https://github.com/javiercaceres/lancer/releases/latest) de **Lancer**, recuerda que se basa en **jQuery** por lo que se necesita incluir esta librería primero para su funcionamiento. Es compatible con las versiones 1.11.* o superior de jQuery.
 
 ```html
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="lance.js"></script>
+```
+
+También puedes incluirla en tu proyecto **Node** utilizando npm.
+
+```javascript
+npm install lancer-js
+```
+
+Para que **jQuery** funcione en Node se requiere el objeto `window` con la propiedad `document`. Este objeto no existe nativamente en Node sin embargo puedes simularlo a través de herramientas como **jsdom**.
+
+```javascript
+require("jsdom").env("", function(err, window) {
+    if (err) {
+        console.error(err);
+        return;
+    }
+ 
+    var $ = require("jquery")(window);
+});
 ```
 
 ## Hola Mundo!
@@ -52,67 +78,6 @@ Como en el ejemplo anterior puede utilizarse para incluir la representación en 
 <body>
     <div>Hello world!</div>
 </body>
-```
-El método `render` actualiza la representación a partir de un nuevo literal.
-
-```javascript
-helloWorld.render( { text: 'Bye bye!' } );
-```
-```html
-<body>
-    <div>Bye bye!</div>
-</body>
-```
-
-El método `remove` elimina la representación tanto internamente como de cualquier instancia incluida en el DOM.
-
-```javascript
-helloWorld.remove();
-helloWorld.get$(); // Devuelve null
-```
-```html
-<body></body>
-```
-
-Una vez removida la representación puede recrearse a través del método `render`, sin embargo, deber ser incluida nuevamente en el DOM.
-
-El último para manipular la representación es `getHTML` equivalente a ejecutar `get$()[0]` que retorna el Element Object de la representación.
-
-Estos métodos solo estarán disponibles en el **reactor** si se ha creado utilizando una plantilla. El literal puede entregar posteriormente. 
-
-La comunicación entre reactores se basa en un sistema de suscripción a **eventos personalizados** a través del método `listen`. El primer argumento es una cadena de caracteres que define al evento, el segundo corresponde al handler a ejecutarse cada vez que se gatilla el evento.
-
-```javascript
-function handler( args ) {
-    ...
-}
-
-helloWorld.listen( 'miEvento', handler );
-```
-
-Un evento puede ser gatillado desde cualquier punto del código que tenga acceso a la variable `lance` usando la función `fire`. Similar al caso anterior, el primer argumento será el nombre del evento, pero el segundo en lugar de una función corresponde a un arreglo con los argumentos para dicha función.
-
-```javascript
-lance.fire( 'miEvento', [ 'arg1', ... ] );
-```
-
-Para desinscribir a un reactor se utiliza el método `forget` cuyo único argumento es el evento en cuestión.
-
-```javascript
-helloWorld.forget( 'miEvento' );
-```
-
-Las propiedades con las que se inicia el reactor se almacenan bajo en nombre de **props**. Si bien pueden actualizarse directamente como cualquier objeto de JavaScript, existe el método `set` que además de modificar las propiedades ejecutará un `render` para actualizar la representación.
-
-```javascript
-var holaMundo = lance.r( '<p class="{class}">{text}</p>', { 
-                    'class' : 'text-blue', text: 'Hola Mundo!' 
-                } );
-// holaMundo.props retorna { 'class' : 'text-blue', text: 'Hola Mundo!' }
-
-holaMundo.set({ text: 'Hello World!' });
-// holaMundo.props retorna { 'class' : 'text-blue', text: 'Hello World!!' }
-// holaMundo.get$() entrega la variable jQuery actualizada
 ```
 
 ## Documentación
@@ -273,6 +238,66 @@ Comunica al bus un evento y los argumentos que podrían usar los handlers de los
 | ---- | ---- | ----------- |
 | event | `string`  | Evento a transmitir a través del bus. |
 | args | `array`  | Argumentos para los handlers. |
+
+### Sincronizador
+
+#### rs([props, reactors]) 
+
+Genera un sincronizador encargado de ejecutar el método 'set' en cada uno de sus reactores cada vez que reciba una actualización sobre sus propiedades.
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |  |
+| ---- | ---- | ----------- | -------- |
+| props | `Object`  | Propiedades con las que se inicializa el sincronizador. | *Optional* |
+| reactors | `array`  | Colección de reactores con que se inicia el sincronizador. | *Optional* |
+
+##### Retorna
+
+- `Object`  Sincronizador.
+
+#### balance(props) 
+
+Determina si debe actualizar o no los reactores. En tal caso ejecuta el método 'set' en cada uno de ellos.
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| props | `Object`  | Literal con las nuevas propiedades. |
+
+##### Retorna
+
+- `Object` Propiedades actualizadas del sincronizador.
+
+#### inc(reactor) 
+
+Agrega un reactor al dominio del sincronizador. No se puede incluir dos 
+veces al mismo reactor. Una vez incluido es inmediatamente sincronizado.
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| reactor | `any`  | - Reactor a incluir. |
+
+##### Retorna
+
+- `Object` Sincronizador.
+
+#### exc(reactor) 
+
+Quita un reactor del dominio del sincronizador.
+
+##### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ---- | ---- | ----------- |
+| reactor | `Object`  | Reactor a excluir. |
+
+##### Retorna
+
+- `Object` Sincronizador.
 
 ## Demo
 
