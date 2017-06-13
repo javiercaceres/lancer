@@ -241,7 +241,7 @@ Comunica al bus un evento y los argumentos que podrían usar los handlers de los
 
 ### Sincronizador
 
-#### rSync([props, reactors]) 
+#### rs([props, reactors]) 
 
 Genera un sincronizador encargado de ejecutar el método 'set' en cada uno de sus reactores cada vez que reciba una actualización sobre sus propiedades.
 
