@@ -99,7 +99,7 @@ var lance = (function () {
      *  
      * @param {Object} [props] - Propiedades con las que se inicializa el sincronizador. 
      * @param {array} [reactors] - Colección de reactores con que se inicia el sincronizador. 
-     * @returns 
+     * @returns {Object} - Sincronizador
      */
     function rSync(props, reactors) {
         
