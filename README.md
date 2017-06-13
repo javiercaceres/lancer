@@ -1,5 +1,6 @@
 # Lancer
 
+[![Version](https://img.shields.io/npm/v/lancer-js.svg)](https://www.npmjs.com/package/lancer-js)
 [![Build Status](https://travis-ci.org/javiercaceres/lancer.svg?branch=develop)](https://travis-ci.org/javiercaceres/lancer)
 [![Coverage Status](https://coveralls.io/repos/github/javiercaceres/lancer/badge.svg?branch=develop)](https://coveralls.io/github/javiercaceres/lancer?branch=develop)
 

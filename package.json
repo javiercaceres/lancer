@@ -1,6 +1,6 @@
 {
   "name": "lancer-js",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A jQuery based tool to make your life easier!",
   "main": "dist/jquery.js",
   "scripts": {
@@ -30,8 +30,12 @@
   "devDependencies": {
     "chai": "^4.0.0",
     "coveralls": "^2.13.1",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0",
     "istanbul": "^0.4.5",
     "jsdom": "9.12.0",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "pump": "^1.0.2"
   }
 }
